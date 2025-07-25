@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trustra - Login & Signup</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(120deg, #8325e7 0%, #0052cc 100%);
+      font-family: 'Montserrat', Arial, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    #particles-js {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+    .auth-container {
+      max-width: 430px;
+      margin: 60px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      padding: 32px 24px;
+      position: relative;
+      animation: fadeIn 1.2s ease;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    .form-toggle {
+      display: flex;
+      justify-content: center;
+    }
+    .toggle-btn {
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #0052cc;
+      padding: 8px 24px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .toggle-btn.active {
+      color: #8325e7;
+      border-bottom: 2px solid #8325e7;
+    }
+    .forms {
+      position: relative;
+      min-height: 425px;
+    }
+    .auth-form {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      pointer-events: none;
+      transition: opacity 0.5s, transform 0.5s;
+      background: transparent;
+      width: 100%;
+      margin-top: -20px;
+    }
+    .auth-form.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      z-index: 2;
+    }
+    .auth-form h2 {
+      color: #0052cc;
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    .auth-form label {
+      font-weight: 600;
+      color: #232336;
+      margin-bottom: 6px;
+      display: block;
+      font-size: 1rem;
+    }
+    .auth-form input {
+      width: 90%;
+      padding: 12px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      background: #f7f7fa;
+      transition: border 0.2s;
+    }
+    .auth-form input:focus {
+      border: 1.5px solid #8325e7;
+      outline: none;
+    }
+    .auth-form button {
+      width: 100%;
+      padding: 12px;
+      background: #8325e7;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .auth-form button:hover {
+      background: #0052cc;
+    }
+    .switch-link {
+      color: #0052cc;
+      cursor: pointer;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+    .auth-form .fa-eye, .auth-form .fa-eye-slash {
+      position: absolute;
+      right: 28px;
+      top: 54%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #8325e7;
+      font-size: 1.1rem;
+    }
+    .input-group {
+      position: relative;
+    }
+    .auth-form .options {
+      display: flex;
+      align-items: center;
+      gap: 100px;
+      font-size: 0.62rem;
+      margin-bottom: 10px;
+    }
+    .auth-form .options label {
+      display: flex;
+      align-items: center;
+      font-weight: normal;
+      color: #232336;
+      margin-bottom: 0;
+      gap: 6px;
+    }
+    .auth-form .options a {
+      color: #8325e7;
+      text-decoration: underline;
+      font-size: 0.98rem;
+    }
+    .auth-form p {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+    .option {
+        gap: -500px;
+    }
+    .option input {
+        font-size: 0.9rem;
+        color: #232336;
+        margin-left: -160px;
+    }
+    .option span {
+        font-size: 0.9rem;
+        color: #232336;
+        margin-left: -180px;
+    }
+    #login-message {
+        text-align: center;
+        font-weight: bold;
+        margin-top: -20px;
+    }
+    #signup-message {
+        text-align: center;
+        font-weight: bold;
+        margin-top: -15px;
+    }
+  </style>
+</head>
+<body>
+ <div id="particles-js"></div>
+  <div class="auth-container">
+    <div class="form-toggle">
+      <button id="show-login" class="toggle-btn active">Login</button>
+      <button id="show-signup" class="toggle-btn">Sign Up</button>
+    </div>
+    <div class="forms">
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form active" autocomplete="off">
+        <h2>Login</h2>
+        <label for="login-email">Email</label>
+        <input type="text" id="login-email" placeholder="Enter email" required>
+        <div class="input-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="Enter password" required>
+          <i id="toggleLoginPassword" class="fas fa-eye"></i>
+        </div>
+        <div class="options">
+          <label><input type="checkbox" id="rememberMe">Remember me</label>
+          <a href="reset.html">Forgotten password?</a>
+        </div>
+        <button type="button" onclick="login()" id="loginBtn" >Login</button><br><br><br>
+        <p>Don't have an account? <span id="switch-to-signup" class="switch-link">Sign Up</span></p>
+        <p id="login-message"></p>
+      </form>
+      <!-- Signup Form -->
+      <form id="signup-form" class="auth-form" autocomplete="off">
+        <h2>Sign Up</h2>
+        <label for="signup-name">Full Name</label>
+        <input type="text" id="signup-name" placeholder="Full Name" required>
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <div class="input-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" placeholder="Password" required>
+          <i id="toggleSignupPassword" class="fas fa-eye"></i>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="agree"><span>I agree to the terms & Conditions</span>
+        </div>
+        <button type="button" onclick="signup()" id="signupBtn" >Create Account</button>
+        <p>Already have an account? <span id="switch-to-login" class="switch-link">Login</span></p>
+        <p id="signup-message"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <script>
+    // Initialize particles.js
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 100,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 5,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+
+        // Login function
+        async function login() {
+            const email = document.getElementById("login-email").value.trim();
+            const password = document.getElementById("login-password").value.trim();
+            const message = document.getElementById("login-message");
+
+            const storedUser = JSON.parse(localStorage.getItem("user"));
+
+            if (!storedUser) {
+                message.innerText = "No account found. Please signup.";
+                message.style.color = "blue";
+                return;
+            }
+
+            message.style.color = "blue";
+            const loadingText = "Logging in. Please wait";
+            let dots = "";
+            const interval = setInterval(() => {
+                dots += ".";
+            if (dots.length > 3 ) dots = "";
+                message.innerText = loadingText + dots;
+            }, 500);
+            
+            await new Promise(resolve => setTimeout(resolve, 3500));
+                clearInterval(interval)
+            
+            if (email === storedUser.email && password === storedUser.password) {
+                message.innerText = "Login successful!!!";
+                message.style.color = "green";
+                setTimeout(() => {
+                    window.location.href = "home.html";
+                }, 2000);
+            } else {
+                message.innerText = "Invalid email or password.";
+                message.style.color = "red";
+            }
+            if (!email || !password) {
+                message.innerText = "Please fill all fields!!!";
+                message.style.color = "blue";
+            }
+          
+        };
+        
+        //signup function
+        async function signup() {
+    const signupName = document.getElementById("signup-name").value.trim();
+    const signupEmail = document.getElementById("signup-email").value.trim();
+    const signupPassword = document.getElementById("signup-password").value.trim();
+    const agree = document.getElementById("agree").checked;
+    const signupMessage = document.getElementById("signup-message");
+
+    signupMessage.style.color = "blue";
+    const loadingText = "Creating account please wait";
+    let dots = "";
+    const interval = setInterval(() => {
+        dots += ".";
+        if (dots.length > 3 ) dots = "";
+        signupMessage.innerText = loadingText + dots;
+    }, 500);
+
+    await new Promise(resolve => setTimeout(resolve, 4500));
+    clearInterval(interval);
+
+    if (!signupName || !signupEmail || !signupPassword ) {
+        signupMessage.innerText = "Please fill out all fields!!!";
+        signupMessage.style.color = "blue";
+        return;
+    }
+    if (!agree) {
+        signupMessage.innerText = "Please agree to terms and condition!!!";
+        signupMessage.style.color = "blue";
+        return;
+    }
+    if (signupPassword.length < 6) {
+        signupMessage.innerText = "Password too short. must be at least 6 characters";
+        signupMessage.style.color = "red";
+        return;
+    }
+    signupMessage.innerText = "Account created successfully!!!";
+    signupMessage.style.color = "green";
+
+    //save user data 
+    const user = {
+        name: signupName,
+        email: signupEmail,
+        password: signupPassword,
+    };
+
+    localStorage.setItem("user", JSON.stringify(user));
+
+    setTimeout(() => {
+        document.getElementById('login-form').classList.add('active');
+        document.getElementById('signup-form').classList.remove('active');
+        document.getElementById('show-login').classList.add('active');
+        document.getElementById('show-signup').classList.remove('active');
+        document.getElementById('signup-message').innerText = "";
+        document.getElementById('signup-name').value = "";
+        document.getElementById('signup-email').value = "";
+        document.getElementById('signup-password').value = "";
+        document.getElementById('agree').checked = false;
+    }, 2700);
+}
+    // Toggle between login and signup forms
+    document.getElementById('show-login').onclick = function() {
+      document.getElementById('login-form').classList.add('active');
+      document.getElementById('signup-form').classList.remove('active');
+      this.classList.add('active');
+      document.getElementById('show-signup').classList.remove('active');
+    };
+    document.getElementById('show-signup').onclick = function() {
+      document.getElementById('signup-form').classList.add('active');
+      document.getElementById('login-form').classList.remove('active');
+      this.classList.add('active');
+      document.getElementById('show-login').classList.remove('active');
+    };
+    document.getElementById('switch-to-signup').onclick = function() {
+      document.getElementById('show-signup').click();
+    };
+    document.getElementById('switch-to-login').onclick = function() {
+      document.getElementById('show-login').click();
+    };
+
+    // Password visibility toggle for login
+    document.getElementById('toggleLoginPassword').onclick = function() {
+      const pwd = document.getElementById('login-password');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        this.classList.remove('fa-eye');
+        this.classList.add('fa-eye-slash');
+      } else {
+        pwd.type = 'password';
+        this.classList.remove('fa-eye-slash');
+        this.classList.add('fa-eye');
+      }
+    };
+    // Password visibility toggle for signup
+    document.getElementById('toggleSignupPassword').onclick = function() {
+      const pwd = document.getElementById('signup-password');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        this.classList.remove('fa-eye');
+        this.classList.add('fa-eye-slash');
+      } else {
+        pwd.type = 'password';
+        this.classList.remove('fa-eye-slash');
+        this.classList.add('fa-eye');
+      }
+    };
+  </script>
+</body>
+</html>
