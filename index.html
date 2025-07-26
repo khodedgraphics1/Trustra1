@@ -167,9 +167,10 @@
         color: black;
         border-bottom: 2px solid white;
       }
-      @media (max-width: 768px) {
+      @media (max-width: 600px) {
         nav {
           flex-direction: column;
+          flex-wrap: nowrap;
           align-items: center;
           margin-left: 0;
           max-width: 100%;
@@ -329,6 +330,7 @@
       color: white;
       margin-left: 30px;
       opacity: 0;
+      animation: slidefromRight 5s ease-in-out forwards;
       transform: translateX(100%);
       transition: opacity 5s, transform 0.8s;
     }
@@ -903,17 +905,6 @@ body.light-mode .footer {
         <input type="email" placeholder="Your email">
         <button type="submit">Subscribe</button>
       </form>
-
-      <div class="language-switcher">
-        🌐 Language:
-        <select>
-          <option>English</option>
-          <option>Français</option>
-          <option>Español</option>
-          <option>العربية</option>
-        </select>
-      </div>
-
       <div class="footer-social">
         <a href="#"><i class="fab fa-facebook-f"></i></a>
         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -948,31 +939,6 @@ body.light-mode .footer {
     };
     typeText();
   };
-document.addEventListener("DOMContentLoaded", function() {
-  const img = document.querySelector('.image-container img');
-  const text = document.querySelector('.text-container');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.target === img) {
-        if (entry.isIntersecting) {
-          img.classList.add('slide-in');
-        } else {
-          img.classList.remove('slide-in');
-        }
-      }
-      if (entry.target === text) {
-        if (entry.isIntersecting) {
-          text.classList.add('slide-in');
-        } else {
-          text.classList.remove('slide-in');
-        }
-      }
-    });
-  }, { threshold: 0.3 });
-
-  observer.observe(img);
-  observer.observe(text);
-});
 document.addEventListener("DOMContentLoaded", function() {
   const welcome = document.querySelector('.welcome');
   const feature = document.querySelector('.feature');
